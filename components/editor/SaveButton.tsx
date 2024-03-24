@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LuInfo } from "react-icons/lu";
-import { TemplatePrivacyEnum } from "@prisma/client";
+import { TemplatePrivacyEnum } from "@/types/template.type";
 
 interface SaveButtonProps {
   setTemplateName: React.Dispatch<React.SetStateAction<string | null>>;
@@ -60,7 +60,7 @@ const SaveButton = ({
             </Label>
             <div className="col-span-3">
               <Select
-                defaultValue={TemplatePrivacyEnum.private}
+                defaultValue={TemplatePrivacyEnum.private.toString()}
                 onValueChange={(value) =>
                   setTemplatePrivacy(
                     value === "private"
@@ -73,10 +73,10 @@ const SaveButton = ({
                   <SelectValue placeholder="Select Privacy" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={TemplatePrivacyEnum.private}>
+                  <SelectItem value={TemplatePrivacyEnum.private.toString()}>
                     Private
                   </SelectItem>
-                  <SelectItem value={TemplatePrivacyEnum.public}>
+                  <SelectItem value={TemplatePrivacyEnum.public.toString()}>
                     Public
                   </SelectItem>
                 </SelectContent>
