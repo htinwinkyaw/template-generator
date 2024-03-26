@@ -1,9 +1,8 @@
-import React from 'react'
+import HomeClient from "./components/HomeClient";
+import React from "react";
 
 const HomePage = () => {
-  return (
-    <div>HomePage</div>
-  )
-}
+  return <HomeClient />;
+};
 
-export default HomePage
+export default HomePage;

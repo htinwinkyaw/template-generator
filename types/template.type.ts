@@ -12,3 +12,17 @@ export enum TemplatePrivacyEnum {
   private,
   public,
 }
+
+export type Paper = {
+  id: string;
+  name: string;
+  height: string;
+  width: string;
+  margin: string;
+  mode: PaperModeEnum;
+};
+
+export enum PaperModeEnum {
+  potrait,
+  landscape,
+}

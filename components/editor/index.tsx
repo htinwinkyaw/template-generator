@@ -3,12 +3,19 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 import { Template, TemplatePrivacyEnum } from "@/types/template.type";
 
-import { Button } from "../ui/button";
-import SaveButton from "./toolbar-menu/SaveButton";
+import CreateTemplateFloatingButtons from "./CreateTemplateFloatingButtons";
+import EditTemplateFloatingButtons from "./EditTemplateFloatingButtons";
+import { FontFamily } from "@tiptap/extension-font-family";
+import { FontSize } from "tiptap-extension-font-size";
 import { StarterKit } from "@tiptap/starter-kit";
 import { Subscript } from "@tiptap/extension-subscript";
 import { Superscript } from "@tiptap/extension-superscript";
+import { Table } from "@tiptap/extension-table";
+import { TableCell } from "@tiptap/extension-table-cell";
+import { TableHeader } from "@tiptap/extension-table-header";
+import { TableRow } from "@tiptap/extension-table-row";
 import { TextAlign } from "@tiptap/extension-text-align";
+import { TextStyle } from "@tiptap/extension-text-style";
 import ToolbarMenu from "./toolbar-menu";
 import { Underline } from "@tiptap/extension-underline";
 import clsx from "clsx";
@@ -23,6 +30,7 @@ interface EditorProps {
   pageMargin: string;
   template?: Template;
   isEditable: boolean;
+  setIsPageSelected?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Editor = ({
@@ -31,6 +39,7 @@ const Editor = ({
   pageMargin,
   template,
   isEditable,
+  setIsPageSelected,
 }: EditorProps) => {
   const router = useRouter();
   const { toast } = useToast();
@@ -39,7 +48,10 @@ const Editor = ({
     TemplatePrivacyEnum.private
   );
 
-  const handleTemplateSave = () => {
+  const width = +pageWidth.split("c")[0];
+  const margin = +pageMargin.split("c")[0];
+
+  const handleCreateTemplate = () => {
     if (templateName === null) {
       return toast({
         title: "Template Creation Failed!",
@@ -86,7 +98,7 @@ const Editor = ({
     }
   };
 
-  const handleTemplateUpdate = () => {
+  const handleUpdateTemplate = () => {
     if (template) {
       try {
         let templates: Template[] = [];
@@ -133,6 +145,24 @@ const Editor = ({
       TextAlign.configure({
         types: ["heading", "paragraph", "table"],
       }),
+      TextStyle,
+      FontFamily.configure({
+        types: ["textStyle"],
+      }),
+      FontSize,
+      Table.configure({
+        HTMLAttributes: {
+          class: "border border-black w-full",
+        },
+        resizable: true,
+        allowTableNodeSelection: true,
+        cellMinWidth: ((width - margin - margin) * 37.7952755906) / 3,
+      }),
+      TableRow.configure({ HTMLAttributes: { class: "border border-black" } }),
+      TableCell.configure({ HTMLAttributes: { class: "border border-black" } }),
+      TableHeader.configure({
+        HTMLAttributes: { class: "bg-slate-300 border border-black" },
+      }),
     ],
     editorProps: {
       attributes: {
@@ -149,6 +179,7 @@ const Editor = ({
           <ToolbarMenu editor={editor} />
         </div>
       )}
+
       <div
         className={clsx(
           "flex flex-col items-center justify-center gap-4 px-auto py-8",
@@ -157,22 +188,20 @@ const Editor = ({
       >
         <EditorContent editor={editor} />
       </div>
-      <div className="fixed bottom-8 right-8">
+
+      {/* FLOATING BUTTONS */}
+      <div className="fixed bottom-8 right-16 flex flex-col gap-2">
         {isEditable && !template && (
-          <SaveButton
+          <CreateTemplateFloatingButtons
+            onSave={handleCreateTemplate}
+            setIsPageSelected={setIsPageSelected!}
             setTemplateName={setTemplateName}
             setTemplatePrivacy={setTemplatePrivacy}
-            onSave={handleTemplateSave}
           />
         )}
 
         {isEditable && template && (
-          <Button
-            onClick={handleTemplateUpdate}
-            className="h-20 w-20 rounded-full shadow-lg"
-          >
-            Save
-          </Button>
+          <EditTemplateFloatingButtons onSave={handleUpdateTemplate} />
         )}
       </div>
     </>

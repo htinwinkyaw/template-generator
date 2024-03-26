@@ -10,6 +10,13 @@ import {
   LuSuperscript,
   LuUnderline,
 } from "react-icons/lu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { Editor } from "@tiptap/react";
 import { IconType } from "react-icons";
@@ -21,6 +28,29 @@ interface TextToolbarMenuProps {
 }
 
 const TextToolbarMenu = ({ editor }: TextToolbarMenuProps) => {
+  const fontFamilies = [
+    { value: "monospace", label: "Monospace" },
+    { value: "cursive", label: "Cursive" },
+    { value: "serif", label: "Serif" },
+    { value: "Comic Sans MS, Comic Sans", label: "Comic Sans" },
+  ];
+
+  const fontSizes = [
+    "8px",
+    "9px",
+    "10px",
+    "12px",
+    "16px",
+    "20px",
+    "24px",
+    "28px",
+    "32px",
+    "40px",
+    "48px",
+    "56px",
+    "64px",
+    "72px",
+  ];
   const textFormatButtons: {
     icon: IconType;
     tooltip: string;
@@ -97,10 +127,55 @@ const TextToolbarMenu = ({ editor }: TextToolbarMenuProps) => {
     },
   ];
 
+  const handleFontFamilyChange = (value: string) => {
+    if (value === "default") {
+      editor?.commands.unsetFontFamily();
+    } else {
+      editor?.chain().focus().setFontFamily(value).run();
+    }
+  };
+
+  const handleFontSizeChange = (value: string) => {
+    editor?.chain().focus().setFontSize(value).run();
+  };
+
   return (
     <div className="flex flex-row items-center gap-[1.5px]">
-      {/* IMPLEMENT: FONT STYLE & FONT SIZE */}
-
+      {/* FONT STYLE & FONT SIZE */}
+      <div className="flex flex-row items-center gap-2">
+        <div className="w-40">
+          <Select defaultValue="default" onValueChange={handleFontFamilyChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Font Style" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="default">Default</SelectItem>
+              {fontFamilies.map((fontFamily, fontIndex) => (
+                <SelectItem key={fontIndex} value={fontFamily.value}>
+                  {fontFamily.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="w-20">
+          <Select defaultValue="16px" onValueChange={handleFontSizeChange}>
+            <SelectTrigger>
+              <SelectValue placeholder="Font Size" />
+            </SelectTrigger>
+            <SelectContent>
+              {fontSizes.map((size, sizeIndex) => {
+                return (
+                  <SelectItem key={sizeIndex} value={`${size}`}>
+                    {size}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      <VerticalSeperator />
       {textFormatButtons.map((formatBtn, fIndex) => {
         const { icon, tooltip, isActive, onClick } = formatBtn;
         return (

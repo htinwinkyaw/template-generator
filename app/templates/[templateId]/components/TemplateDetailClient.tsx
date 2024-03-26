@@ -1,21 +1,11 @@
 "use client";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+import { useEffect, useState } from "react";
 
-import { Button } from "@/components/ui/button";
 import Editor from "@/components/editor";
 import NullData from "@/components/NullData";
 import { Template } from "@/types/template.type";
+import TemplateDetailFloatingButtons from "./TemplateDetailFloatingButton";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
@@ -25,20 +15,22 @@ interface TemplateDetailClientProps {
 
 const TemplateDetailClient = ({ templateId }: TemplateDetailClientProps) => {
   const router = useRouter();
+  const [template, setTemplate] = useState<Template | undefined>(undefined);
 
-  let template: Template | undefined = undefined;
-  try {
-    const dataJSON = localStorage.getItem("templates");
-    if (dataJSON) {
-      const templates: Template[] = JSON.parse(dataJSON);
-      template = templates.find((entry) => entry.id === templateId);
+  useEffect(() => {
+    try {
+      const dataJSON = localStorage.getItem("templates");
+      if (dataJSON) {
+        const templates: Template[] = JSON.parse(dataJSON);
+        const foundTemplate = templates.find(
+          (entry) => entry.id === templateId
+        );
+        setTemplate(foundTemplate);
+      }
+    } catch (error) {
+      setTemplate(undefined);
     }
-  } catch (error) {
-    template = undefined;
-  }
-
-  if (template === undefined)
-    return <NullData title="404: Template Not Found!" />;
+  }, [templateId]);
 
   const handleDeleteTemplate = () => {
     try {
@@ -65,6 +57,7 @@ const TemplateDetailClient = ({ templateId }: TemplateDetailClientProps) => {
     }
   };
 
+  if (!template) return <NullData title="404: Template Not Found!" />;
   return (
     <div className="bg-slate-200">
       <Editor
@@ -75,33 +68,11 @@ const TemplateDetailClient = ({ templateId }: TemplateDetailClientProps) => {
         isEditable={false}
       />
 
-      <div className="flex flex-row items-center justify-center gap-4 pb-8">
-        <Button onClick={() => router.push(`/templates/${template.id}/apply`)}>
-          Apply
-        </Button>
-        <Button onClick={() => router.push(`/templates/${template.id}/edit`)}>
-          Edit
-        </Button>
-        <AlertDialog>
-          <AlertDialogTrigger>
-            <Button variant="destructive">Delete</Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Do you really want to delete?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                template from our servers.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteTemplate}>
-                Continue
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+      <div className="fixed bottom-8 right-16 flex flex-col gap-2">
+        <TemplateDetailFloatingButtons
+          template={template}
+          onDelete={handleDeleteTemplate}
+        />
       </div>
     </div>
   );

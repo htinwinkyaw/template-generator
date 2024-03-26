@@ -5,6 +5,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { LuInfo, LuSave } from "react-icons/lu";
 import {
   Select,
   SelectContent,
@@ -16,23 +17,27 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { LuInfo } from "react-icons/lu";
 import { TemplatePrivacyEnum } from "@/types/template.type";
 
-interface SaveButtonProps {
+interface SaveDialogButtonProps {
   setTemplateName: React.Dispatch<React.SetStateAction<string | null>>;
   setTemplatePrivacy: React.Dispatch<React.SetStateAction<TemplatePrivacyEnum>>;
   onSave: () => void;
 }
-const SaveButton = ({
+const SaveDialogButton = ({
   setTemplateName,
   setTemplatePrivacy,
   onSave,
-}: SaveButtonProps) => {
+}: SaveDialogButtonProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="h-20 w-20 rounded-full shadow-lg">Save</Button>
+        <div className="flex flex-row items-center gap-2 px-4 py-1 cursor-pointer hover:bg-slate-50 hover:rounded-lg">
+          <Button>
+            <LuSave size={24} />
+          </Button>
+          <span>Save</span>
+        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -93,4 +98,4 @@ const SaveButton = ({
   );
 };
 
-export default SaveButton;
+export default SaveDialogButton;
