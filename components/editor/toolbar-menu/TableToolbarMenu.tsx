@@ -105,7 +105,7 @@ const TableToolbarMenu = ({ editor }: TableToolbarMenuProps) => {
           />
         );
       })}
-      <VerticalSeperator />
+      {/* <VerticalSeperator />
       <div className="flex flex-row items-center gap-2">
         <TbArrowsMoveHorizontal size={24} />
         <Input type="number" className="w-16" min="1" />
@@ -114,7 +114,7 @@ const TableToolbarMenu = ({ editor }: TableToolbarMenuProps) => {
       <div className="flex flex-row items-center gap-2">
         <TbArrowsMoveVertical size={24} />
         <Input type="number" className="w-16" min="1" />
-      </div>
+      </div> */}
     </div>
   );
 };

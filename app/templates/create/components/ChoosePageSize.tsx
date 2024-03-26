@@ -28,7 +28,7 @@ const ChoosePageSize = ({
 
   return (
     <div className="bg-white">
-      <h1 className="text-center text-2xl font-semibold mx-auto py-8">
+      <h1 className="text-center text-slate-600 text-2xl font-semibold mx-auto py-8">
         Choose The Paper Size
       </h1>
       <div className="grid grid-cols-5 gap-2 border border-slate-300 mx-10 mb-4">
@@ -44,8 +44,9 @@ const ChoosePageSize = ({
               <div
                 className={clsx(
                   "flex flex-col items-center justify-center gap-1",
-                  "bg-white shadow-lg cursor-pointer hover:bg-blue-300",
-                  { "bg-blue-200": paper.id === activePaper }
+                  "shadow-lg cursor-pointer hover:bg-blue-300",
+                  { "bg-blue-200": activePaper === paper.id },
+                  { "bg-white ": activePaper !== paper.id }
                 )}
                 style={{ height: pageHeight, width: pageWidth }}
                 onClick={handlePageSelect.bind(null, paper)}

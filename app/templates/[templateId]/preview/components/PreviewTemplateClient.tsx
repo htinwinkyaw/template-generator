@@ -2,6 +2,7 @@
 
 import Editor from "@/components/editor";
 import NullData from "@/components/NullData";
+import PreviewTemplateFloatingButtons from "./PreviewTemplateFloatingButtons";
 import { Template } from "@/types/template.type";
 import { replacePlaceholders } from "@/utils/replacePlaceholders";
 import { useToast } from "@/components/ui/use-toast";
@@ -54,6 +55,9 @@ const PreviewTemplateClient = ({ templateId }: PreviewTemplateClientProps) => {
         template={generatedTemplate}
         isEditable={false}
       />
+      <div className="fixed bottom-8 right-16 flex flex-col gap-2">
+        <PreviewTemplateFloatingButtons />
+      </div>
     </div>
   );
 };
