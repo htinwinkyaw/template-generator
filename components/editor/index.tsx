@@ -19,10 +19,10 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import ToolbarMenu from "./toolbar-menu";
 import { Underline } from "@tiptap/extension-underline";
 import clsx from "clsx";
+import { templateActions } from "@/actions/templateActions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useToast } from "../ui/use-toast";
-import { v4 as uuidv4 } from "uuid";
 
 interface EditorProps {
   pageHeight: string;
@@ -62,24 +62,14 @@ const Editor = ({
     }
 
     try {
-      let templates: Template[] = [];
-      const templatesJSON = localStorage.getItem("templates");
-
-      if (templatesJSON) {
-        templates = JSON.parse(templatesJSON);
-      }
-
-      templates.push({
-        id: uuidv4(),
-        name: templateName,
-        privacy: templatePrivacy,
-        format: editor?.getHTML() || "<p></p>",
-        pageHeight: pageHeight,
-        pageWidth: pageWidth,
-        pageMargin: pageMargin,
-      });
-
-      localStorage.setItem("templates", JSON.stringify(templates));
+      templateActions.createTemplate(
+        templateName,
+        templatePrivacy,
+        editor?.getHTML() || "<p></p>",
+        pageHeight,
+        pageWidth,
+        pageMargin
+      );
 
       toast({
         title: "Template Created Successfully.",
@@ -106,15 +96,10 @@ const Editor = ({
         if (templatesJSON) {
           templates = JSON.parse(templatesJSON);
         }
-        const templateIndex = templates.findIndex(
-          (entry) => entry.id === template.id
+        templateActions.updateTemplateById(
+          template.id,
+          editor?.getHTML() || "<p></p>"
         );
-        templates[templateIndex] = {
-          ...template,
-          format: editor?.getHTML() || "<p></p>",
-        };
-
-        localStorage.setItem("templates", JSON.stringify(templates));
 
         toast({
           title: "Template Updated Successfully.",

@@ -3,14 +3,12 @@
 import NullData from "@/components/NullData";
 import { Template } from "@/types/template.type";
 import TemplateList from "./TemplateList";
+import { templateActions } from "@/actions/templateActions";
 
 const TemplatesClient = () => {
   let templates: Template[] | null = [];
   try {
-    const dataJSON = localStorage.getItem("templates");
-    if (dataJSON) {
-      templates = JSON.parse(dataJSON);
-    }
+    templates = templateActions.getAllTemplates();
   } catch (error) {
     templates = null;
   }
