@@ -6,6 +6,7 @@ import Editor from "@/components/editor";
 import NullData from "@/components/NullData";
 import { Template } from "@/types/template.type";
 import TemplateDetailFloatingButtons from "./TemplateDetailFloatingButton";
+import { templateActions } from "@/actions/templateActions";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 
@@ -15,39 +16,28 @@ interface TemplateDetailClientProps {
 
 const TemplateDetailClient = ({ templateId }: TemplateDetailClientProps) => {
   const router = useRouter();
-  const [template, setTemplate] = useState<Template | undefined>(undefined);
+  const [template, setTemplate] = useState<Template | null>(null);
 
   useEffect(() => {
     try {
-      const dataJSON = localStorage.getItem("templates");
-      if (dataJSON) {
-        const templates: Template[] = JSON.parse(dataJSON);
-        const foundTemplate = templates.find(
-          (entry) => entry.id === templateId
-        );
-        setTemplate(foundTemplate);
-      }
+      const foundTemplate = templateActions.getSingleTempalteById(templateId);
+      if (foundTemplate) setTemplate(foundTemplate);
+      else setTemplate(null);
     } catch (error) {
-      setTemplate(undefined);
+      setTemplate(null);
     }
   }, [templateId]);
 
   const handleDeleteTemplate = () => {
     try {
-      const dataJSON = localStorage.getItem("templates");
-      if (dataJSON) {
-        const templates: Template[] = JSON.parse(dataJSON);
-        const filteredTemplates = templates.filter(
-          (temp) => temp.id !== templateId
-        );
-        localStorage.setItem("templates", JSON.stringify(filteredTemplates));
-        toast({
-          title: "Template Deletion Successful!",
-          description: "Template is deleted from the database successfully.",
-        });
-        router.push("/templates");
-        router.refresh();
-      }
+      templateActions.deleteTemplateById(templateId);
+
+      toast({
+        title: "Template Deletion Successful!",
+        description: "Template is deleted from the database successfully.",
+      });
+      router.push("/templates");
+      router.refresh();
     } catch (error) {
       toast({
         title: "Template Deletion Failed!",

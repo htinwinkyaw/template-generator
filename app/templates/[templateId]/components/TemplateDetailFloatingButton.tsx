@@ -52,7 +52,7 @@ const TemplateDetailFloatingButtons = ({
       </div>
 
       <AlertDialog>
-        <AlertDialogTrigger>
+        <AlertDialogTrigger asChild>
           <div className={customClasses}>
             <Button variant="destructive">
               <LuTrash2 size={24} />
