@@ -17,8 +17,11 @@ const PreviewTemplateFloatingButtons = () => {
 
   return (
     <div>
-      <div className={`${customClasses} cursor-not-allowed`} onClick={() => {}}>
-        <Button>
+      <div
+        className={`${customClasses} disabled:cursor-not-allowed`}
+        onClick={() => {}}
+      >
+        <Button disabled>
           <LuExternalLink size={24} />
         </Button>
         <span>Export</span>
